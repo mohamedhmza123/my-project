@@ -1,8 +1,29 @@
 pipeline {
     agent any
+    environment{
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+         GITHUB_CREDENTIALS = credentials('github')
+   }
 
     stages {
         // Stage 1: Pull the latest code from GitHub
+         stage('docker login'){
+           steps{
+                 script{
+                   
+                       
+                         sh 'echo docker login -u $DOCKERHUB_CREDENTIALS_USR | $DOCKERHUB_CREDENTIALS_PSW --password-stdin'
+                 }
+             }
+         }
+             stage('github login'){
+             steps{
+                 script{
+                   
+                       
+                         sh 'echo docker login -u $GITHUB_CREDENTIALS_USR | $GITHUB_CREDENTIALS_PSW --password-stdin'
+                 }
+             }
         stage('Checkout Code') {
             steps {
                    git branch: 'main',
@@ -35,5 +56,6 @@ pipeline {
         failure {
             echo 'Pipeline failed. Please check the logs for errors.'
         }
+    }
     }
 }
