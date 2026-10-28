@@ -1,7 +1,6 @@
 ---
 - name: "Build a container with ansible"
   hosts: all
-  connection: host
   tasks:
     - name: stop current running container
       command: docker stop web-container
