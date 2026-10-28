@@ -5,6 +5,8 @@ pipeline {
         // Stage 1: Pull the latest code from GitHub
         stage('Checkout Code') {
             steps {
+                   git branch: 'main',
+            url: 'https://github.com/mohamedhmza123/my-project.git'
                 checkout scm
             }
         }
