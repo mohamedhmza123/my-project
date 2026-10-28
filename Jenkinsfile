@@ -24,6 +24,7 @@ pipeline {
                          sh 'echo docker login -u $GITHUB_CREDENTIALS_USR | $GITHUB_CREDENTIALS_PSW --password-stdin'
                  }
              }
+        }
         stage('Checkout Code') {
             steps {
                    git branch: 'main',
@@ -58,4 +59,3 @@ pipeline {
         }
     }
     }
-}
