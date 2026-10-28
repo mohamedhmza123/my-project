@@ -9,20 +9,24 @@ pipeline {
         // Stage 1: Pull the latest code from GitHub
          stage('docker login'){
            steps{
-                 script{
+                 
                    
                        
-                         sh 'echo docker login -u $DOCKERHUB_CREDENTIALS_USR | $DOCKERHUB_CREDENTIALS_PSW --password-stdin'
-                 }
+                         sh '''
+                         echo docker login -u $DOCKERHUB_CREDENTIALS_USR | $DOCKERHUB_CREDENTIALS_PSW --password-stdin
+                         '''
+                 
              }
          }
              stage('github login'){
              steps{
-                 script{
+                 
                    
                        
-                         sh 'echo docker login -u $GITHUB_CREDENTIALS_USR | $GITHUB_CREDENTIALS_PSW --password-stdin'
-                 }
+                         sh '''
+                         echo docker login -u $GITHUB_CREDENTIALS_USR | $GITHUB_CREDENTIALS_PSW --password-stdin
+                         '''
+                 
              }
         }
         stage('Checkout Code') {
