@@ -37,14 +37,14 @@ pipeline {
         stage('Test Playbook') {
             steps {
                 echo 'Running Ansible syntax check...'
-                sh 'ansible-playbook -i inventory docker-install.yml --syntax-check'
+                sh 'ansible-playbook -i inventory ansible-playbook.yml --syntax-check'
             }
         }
 
         stage('Deploy to Host') {
             steps {
                 echo 'Executing Ansible deployment playbook...'
-                sh 'ansible-playbook -i inventory docker-install.yml'
+                sh 'ansible-playbook -i inventory ansible-playbook.yml'
             }
         }
     }
