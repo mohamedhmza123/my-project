@@ -1,0 +1,24 @@
+---
+- name: "Build a container with ansible"
+  hosts: all
+  tasks:
+    - name: stop current running container
+      command: docker stop web-container
+      ignore_errors: yes
+
+    - name: remove stopped container
+      command: docker rm web-container
+      ignore_errors: yes
+
+    - name: remove comingsoon-image
+      command: docker rmi mohamedhmza123/comingsoon-page
+      ignore_errors: yes
+
+    - name: build docker image using the Dockerfile
+      command: docker build -t mohamedhmza123/comingsoon-page .
+
+    - name: Push Image to dockerhub
+      command: docker push mohamedhmza123/comingsoon-page
+
+    - name: run container
+      command: docker run -d --name web-container -p 8000:80 mohamedhmza123/comingsoon-page
