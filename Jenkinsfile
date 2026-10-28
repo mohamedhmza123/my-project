@@ -1,42 +1,39 @@
+
 pipeline {
     agent any
-    environment{
+
+    environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-         GITHUB_CREDENTIALS = credentials('github')
-   }
+        GITHUB_CREDENTIALS = credentials('github')
+    }
 
     stages {
-        // Stage 1: Pull the latest code from GitHub
-         stage('docker login'){
-           steps{
-                 
-                   
-                       
-                         sh '''
-                         echo docker login -u $DOCKERHUB_CREDENTIALS_USR | $DOCKERHUB_CREDENTIALS_PSW --password-stdin
-                         '''
-                 
-             }
-         }
-             stage('github login'){
-             steps{
-                 
-                   
-                       
-                         sh '''
-                         echo docker login -u $GITHUB_CREDENTIALS_USR | $GITHUB_CREDENTIALS_PSW --password-stdin
-                         '''
-                 
-             }
+        stage('Docker Hub Login') {
+            steps {
+                sh '''
+                    set -eu
+                    printf '%s' "$DOCKERHUB_CREDENTIALS_PSW" |
+                        docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin
+                '''
+            }
         }
+
+        stage('GitHub Container Registry Login') {
+            steps {
+                sh '''
+                    set -eu
+                    printf '%s' "$GITHUB_CREDENTIALS_PSW" |
+                        docker login ghcr.io -u "$GITHUB_CREDENTIALS_USR" --password-stdin
+                '''
+            }
+        }
+
         stage('Checkout Code') {
             steps {
-                
                 checkout scm
             }
         }
 
-        // Stage 2: Test / Validate the Ansible Playbook syntax
         stage('Test Playbook') {
             steps {
                 echo 'Running Ansible syntax check...'
@@ -44,7 +41,6 @@ pipeline {
             }
         }
 
-        // Stage 3: Deploy to Host using Ansible
         stage('Deploy to Host') {
             steps {
                 echo 'Executing Ansible deployment playbook...'
@@ -57,8 +53,9 @@ pipeline {
         success {
             echo 'Pipeline completed successfully! The container has been built and deployed.'
         }
+
         failure {
             echo 'Pipeline failed. Please check the logs for errors.'
         }
     }
-    }
+}
