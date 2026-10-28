@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        // Stage 1: Pull the latest code from GitHub
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        // Stage 2: Test / Validate the Ansible Playbook syntax
+        stage('Test Playbook') {
+            steps {
+                echo 'Running Ansible syntax check...'
+                sh 'ansible-playbook -i inventory docker-install.yml --syntax-check'
+            }
+        }
+
+        // Stage 3: Deploy to Host using Ansible
+        stage('Deploy to Host') {
+            steps {
+                echo 'Executing Ansible deployment playbook...'
+                sh 'ansible-playbook -i inventory docker-install.yml'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully! The container has been built and deployed.'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs for errors.'
+        }
+    }
+}
